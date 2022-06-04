@@ -1,0 +1,10 @@
+mate
+*.swp
+*.o
+*.output
+*Lexer.l.cc
+*Lexer.l.hh
+*Parser.y~
+*Parser.y.cc
+*Parser.y.hh
+.vscode/*
