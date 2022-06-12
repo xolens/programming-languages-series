@@ -8,3 +8,4 @@ mate
 *Parser.y.cc
 *Parser.y.hh
 .vscode/*
+**/.vscode/*

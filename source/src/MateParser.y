@@ -21,6 +21,8 @@
 
 
 %token CLASS IDENTIFIER
+%token PUBLIC STATIC
+%token PRINT STRING_LITERAL
 
 %start entry_point
 
@@ -28,6 +30,28 @@
 
 entry_point
 	: CLASS IDENTIFIER '{' '}'
+	| CLASS IDENTIFIER '{' function '}'
+	;
+
+function
+	: function_header compound_statement
+	;
+
+function_header
+	: PUBLIC STATIC data_type IDENTIFIER '(' data_type IDENTIFIER ')'
+	;
+
+data_type
+	: IDENTIFIER
+	| IDENTIFIER '['  ']'
+	;
+
+compound_statement
+	: '{' statement '}'
+	;
+
+statement
+	: PRINT STRING_LITERAL ';'
 	;
 
 %%

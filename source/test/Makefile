@@ -3,7 +3,6 @@ all: build test
 build:
 	$(MAKE) -C ../src
 
-test: empty-class-test
-
-empty-class-test:
+test: 
 	$(MAKE) -C ./empty-class
+	$(MAKE) -C ./hello-world

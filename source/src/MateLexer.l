@@ -39,28 +39,36 @@ L			[a-zA-Z_]
 
 %%
 
-"class" { 
-	return(CLASS);
-}
+"print"						{ return(PRINT);}
 
-{L}({L}|{D})*	 { 
-	return(IDENTIFIER);
-}
+"class"						{ return(CLASS);}
 
-"{"	{
-	return('{'); 
-}
+"public"					{ return(PUBLIC);}
 
-"}"	{
-	return('}'); 
-}
+"static"					{ return(STATIC);}
 
-[ \t\v\n\f] {
-	/* Ignore white spaces */
-}
+"{"							{ return('{'); }
 
-.	{
-	/* Add code to complain about unmatched characters */ 
-}
+"}"							{ return('}'); }
+
+"["							{ return('['); }
+
+"]"							{ return(']'); }
+
+"("							{ return('('); }
+
+")"							{ return(')'); }
+
+";"							{ return(';'); }
+
+{L}({L}|{D})*				{ return(IDENTIFIER); }
+
+L?\"(\\.|[^\\"\n])*\"		{ return(STRING_LITERAL); }
+
+"//"[^\n]* 					{ /* consume single line comment */ }
+
+[ \t\v\n\f]					{ /* Ignore white spaces */ }
+
+.							{ /* Add code to complain about unmatched characters */ }
 
 %%
