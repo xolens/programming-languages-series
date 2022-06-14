@@ -1,7 +1,7 @@
 all: build test
 
 build:
-	$(MAKE) -C ../src
+	$(MAKE) -C ../build
 
 test: 
 	$(MAKE) -C ./empty-class

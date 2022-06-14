@@ -63,7 +63,7 @@ L			[a-zA-Z_]
 
 {L}({L}|{D})*				{ return(IDENTIFIER); }
 
-L?\"(\\.|[^\\"\n])*\"		{ return(STRING_LITERAL); }
+\"(\\.|[^\\"\n])*\"		{ return(STRING_LITERAL); }
 
 "//"[^\n]* 					{ /* consume single line comment */ }
 
