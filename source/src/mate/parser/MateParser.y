@@ -9,7 +9,7 @@
 %code requires{
 
 	#include <iostream>
-	#include "mate.hh"
+	#include "../mate.hh"
 }
 
 

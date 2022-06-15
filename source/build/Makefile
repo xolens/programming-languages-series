@@ -1,11 +1,11 @@
-all: build build-parser
+all: build
 
 build-parser:
 	$(MAKE) -C ../src/mate/parser/
 
-build:
+build: build-parser
 	g++ -g -o mate \
-		../src/mate/parser/mate.cc  \
+		../src/mate/mate.cc  \
 		../src/mate/parser/MateLexer.l.cc  \
 		../src/mate/parser/MateParser.y.cc
 			

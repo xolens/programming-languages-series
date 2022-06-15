@@ -1,6 +1,6 @@
 #include <iostream>
 #include "./mate.hh"
-#include "./MateLexer.l.hh"
+#include "./parser/MateLexer.l.hh"
 
 
 int main(int argc, char* argv[]){
