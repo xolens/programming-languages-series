@@ -7,5 +7,16 @@ build: build-parser
 	g++ -g -o mate \
 		../src/mate/mate.cc  \
 		../src/mate/parser/MateLexer.l.cc  \
-		../src/mate/parser/MateParser.y.cc
+		../src/mate/parser/MateParser.y.cc \
+		../src/mate/ast/classifier/Classifier.cc \
+		../src/mate/ast/classifier/Function.cc \
+		../src/mate/ast/classifier/FunctionHeader.cc \
+		../src/mate/ast/classifier/Modifiable.cc \
+		../src/mate/ast/expression/DataType.cc \
+		../src/mate/ast/statement/CompoundStatement.cc \
+		../src/mate/ast/statement/PrintStatement.cc \
+		../src/mate/ast/statement/Statement.cc 
+
+ 
+
 			
