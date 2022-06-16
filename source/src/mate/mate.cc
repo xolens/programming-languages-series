@@ -23,7 +23,7 @@ int main(int argc, char* argv[]){
 
     std::cout << "[mate]---\n";
     _class->execute();
-    std::cout << "---------..\n";
+    std::cout << "---------\n";
 
     return 0;
 }

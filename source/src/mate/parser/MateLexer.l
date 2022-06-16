@@ -67,11 +67,12 @@ L			[a-zA-Z_]
 {L}({L}|{D})*				{ strcpy(yylval->_String, yytext); return(IDENTIFIER); }
 
 \"(\\.|[^\\"\n])*\"		    { 
+    yytext[strlen(yytext)-1]=0; 
     char* tmp = replaceAll(yytext, "\\a", "\a"); tmp = replaceAll(tmp, "\\b", "\b");
     tmp = replaceAll(tmp, "\\e", "\e"); tmp = replaceAll(tmp, "\\f", "\f"); 
     tmp = replaceAll(tmp, "\\n", "\n"); tmp = replaceAll(tmp, "\\r", "\r");
     tmp = replaceAll(tmp, "\\t", "\t"); tmp = replaceAll(tmp, "\\v", "\v");
-    yytext[strlen(yytext)-1]=0; strcpy(yylval->_String, tmp+1); return(STRING_LITERAL);
+    strcpy(yylval->_String, tmp+1); return(STRING_LITERAL);
 }
 
 "//"[^\n]* 					{ /* consume single line comment */ }
