@@ -20,6 +20,7 @@ public:
 	
 	mate::ast::classifier::Function* getFunction();
 	void setFunction(mate::ast::classifier::Function* f);
+	void execute();
 
 };
 

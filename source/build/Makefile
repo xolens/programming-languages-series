@@ -13,6 +13,7 @@ build: build-parser
 		../src/mate/ast/classifier/FunctionHeader.cc \
 		../src/mate/ast/classifier/Modifiable.cc \
 		../src/mate/ast/expression/DataType.cc \
+		../src/mate/ast/expression/ArrayType.cc \
 		../src/mate/ast/statement/CompoundStatement.cc \
 		../src/mate/ast/statement/PrintStatement.cc \
 		../src/mate/ast/statement/Statement.cc 

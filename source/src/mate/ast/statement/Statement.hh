@@ -7,6 +7,8 @@ class Statement{
 public:
 	Statement();
 	~Statement();
+	
+	virtual void  execute();
 
 };
 

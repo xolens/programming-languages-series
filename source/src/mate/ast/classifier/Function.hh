@@ -27,6 +27,8 @@ public:
 
 	mate::ast::statement::CompoundStatement* getStatements();
 	void setStatements(mate::ast::statement::CompoundStatement* stm);
+
+	void execute();
 };
 
 } /* end namespace mate::ast::classifier */

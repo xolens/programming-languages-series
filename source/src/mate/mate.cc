@@ -1,6 +1,7 @@
 #include <iostream>
 #include "./mate.hh"
 #include "./parser/MateLexer.l.hh"
+#include "./ast/classifier/Classifier.hh"
 
 
 int main(int argc, char* argv[]){
@@ -12,13 +13,17 @@ int main(int argc, char* argv[]){
 
     yyscan_t scanner;
     FILE *input = fopen(argv[1], "r");
+    mate::ast::classifier::Classifier* _class = new mate::ast::classifier::Classifier();
 
-	yylex_init(&scanner);
+	yylex_init_extra(_class, &scanner);
 	yyset_in(input, scanner);
 
-    yyparse(scanner);
+    yyparse(scanner, _class);
 	yylex_destroy(scanner);
-    std::cout << "Done..\n";
+
+    std::cout << "[mate]---\n";
+    _class->execute();
+    std::cout << "---------..\n";
 
     return 0;
 }

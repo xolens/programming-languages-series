@@ -17,6 +17,8 @@ public:
 	PrintStatement(std::string _value);
 	~PrintStatement();
 
+	void execute() override;
+
 };
 
 

@@ -22,3 +22,9 @@ mate::ast::classifier::Function* mate::ast::classifier::Classifier::getFunction(
 void mate::ast::classifier::Classifier::setFunction(mate::ast::classifier::Function* f){
 	this->_function = f;
 }
+
+void mate::ast::classifier::Classifier::execute(){
+    if(this->_function!=NULL){
+	    this->_function->execute();
+    }
+}

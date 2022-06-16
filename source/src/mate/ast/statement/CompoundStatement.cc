@@ -9,5 +9,14 @@ std::list<mate::ast::statement::Statement*> mate::ast::statement::CompoundStatem
 }
 
 void mate::ast::statement::CompoundStatement::addStatement(mate::ast::statement::Statement* s){
-   this->_statements.push_back(s);
+   if(s!=NULL){
+      this->_statements.push_back(s);
+   }
+}
+
+
+void mate::ast::statement::CompoundStatement::execute(){
+   for (mate::ast::statement::Statement*  s : this->_statements ) {
+      s->execute();
+   }
 }

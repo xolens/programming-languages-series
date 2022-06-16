@@ -28,3 +28,9 @@ mate::ast::statement::CompoundStatement* mate::ast::classifier::Function::getSta
 void mate::ast::classifier::Function::setStatements(mate::ast::statement::CompoundStatement* stm){
     this->_compoundStat = stm;
 }
+
+void mate::ast::classifier::Function::execute(){
+    if(this->_compoundStat!=NULL){
+	    this->_compoundStat->execute();
+    }
+}
