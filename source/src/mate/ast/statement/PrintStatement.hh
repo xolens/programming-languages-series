@@ -1,8 +1,7 @@
 #pragma once
-#include <list>
 #include <iostream>
-#include <string>
 #include "Statement.hh"
+#include "../expression/Expression.hh"
 
 
 namespace mate::ast::statement {
@@ -10,11 +9,11 @@ namespace mate::ast::statement {
 class PrintStatement: public Statement {
 
 private:
-	std::string _value;
+	mate::ast::expression::Expression* _value;
 
 
 public:
-	PrintStatement(std::string _value);
+	PrintStatement(mate::ast::expression::Expression* _value);
 	~PrintStatement();
 
 	void execute() override;

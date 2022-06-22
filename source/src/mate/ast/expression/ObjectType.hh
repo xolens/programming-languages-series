@@ -4,14 +4,14 @@
 
 namespace mate::ast::expression {
 
-class DataType {
+class ObjectType {
 
 private:
 	std::string _value;
 
 public:
-	DataType(std::string _value);
-	~DataType();
+	ObjectType(std::string _value);
+	~ObjectType();
 
 	void setValue(std::string _value);
 	std::string getValue();

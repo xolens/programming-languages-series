@@ -39,6 +39,11 @@
 
 D			[0-9]
 L			[a-zA-Z_]
+H			[a-fA-F0-9]
+E			([Ee][+-]?{D}+)
+NST			([+-]?{D}+[nstNST])
+P                       ([Pp][+-]?{D}+)
+FS			(f|F|l|L)
 
 %%
 
@@ -65,6 +70,46 @@ L			[a-zA-Z_]
 ";"							{ return(';'); }
 
 {L}({L}|{D})*				{ strcpy(yylval->_String, yytext); return(IDENTIFIER); }
+
+0[xX]{H}+	                { yylval->_Int = std::stoll(yytext); return(INTEGER); }
+
+0[0-7]*	                    { yylval->_Int = std::stoll(yytext); return(INTEGER); }
+
+[1-9]{D}*	                { yylval->_Int = std::stoll(yytext); return(INTEGER); }
+
+{D}+{E}{FS}?	            { yylval->_Double = std::stold(yytext); return(DOUBLE); }
+
+{D}*"."{D}+{E}?{FS}?	    { yylval->_Double = std::stold(yytext); return(DOUBLE); }
+
+{D}+"."{D}*{E}?{FS}?	    { yylval->_Double = std::stold(yytext); return(DOUBLE); }
+
+0[xX]{H}+{P}{FS}?	        { yylval->_Double = std::stold(yytext); return(DOUBLE); }
+
+0[xX]{H}*"."{H}+{P}?{FS}?   { yylval->_Double = std::stold(yytext); return(DOUBLE); }
+
+0[xX]{H}+"."{H}*{P}?{FS}?   { yylval->_Double = std::stold(yytext); return(DOUBLE); }
+
+"+="	                    { return(ADD_EQ); }
+
+"-="	                    { return(SUB_EQ); }
+
+"*="	                    { return(MUL_EQ); }
+
+"/="	                    { return(DIV_EQ); }
+
+"%="	                    { return(MOD_EQ); }
+
+"="	                        { return('='); }
+
+"-"	                        { return('-'); }
+
+"+"	                        { return('+'); }
+
+"*"	                        { return('*'); }
+
+"/"	                        { return('/'); }
+
+"%"	                        { return('%'); }
 
 \"(\\.|[^\\"\n])*\"		    { 
     yytext[strlen(yytext)-1]=0; 

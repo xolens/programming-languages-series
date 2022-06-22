@@ -2,15 +2,14 @@ class HelloWorld {
         
     public static void main (String[] args) {
         
-        // `print` will be used as a special command to print text 
-        // on the standard output for this initial release
-        // Will be replaced by `system.Console.write("Hello World!")`
-        print "Hello World!\n";
+        a = 4 + 2 * 3;              // a is 10
+        b = 4 + (2 * 3);            // b is 10
+        c = (4 + 2) * 3;            // c is 18
+        print "a = " + a + "\n";
+        print "b = " + b + "\n";
+        print "c = " + c + "\n";
+        print "d = " + d + "\n";    // d is null
 
     }
 
 }
-
-
-
-

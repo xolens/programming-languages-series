@@ -5,7 +5,7 @@ mate::ast::classifier::FunctionHeader::FunctionHeader(){
     this->_returnType = NULL;
 }
 
-mate::ast::classifier::FunctionHeader::FunctionHeader(mate::ast::expression::DataType* _returnType, std::string _name){
+mate::ast::classifier::FunctionHeader::FunctionHeader(mate::ast::expression::ObjectType* _returnType, std::string _name){
     this->_name = _name;
     this->_returnType = _returnType;
 }
@@ -24,18 +24,18 @@ std::string mate::ast::classifier::FunctionHeader::fullName(){
     return this->_name;
 }
 
-std::map<std::string, mate::ast::expression::DataType*> mate::ast::classifier::FunctionHeader::getArgs(){
+std::map<std::string, mate::ast::expression::ObjectType*> mate::ast::classifier::FunctionHeader::getArgs(){
     return this->_args;
 }
 
-void mate::ast::classifier::FunctionHeader::setArgs(std::map<std::string, mate::ast::expression::DataType*> s){
+void mate::ast::classifier::FunctionHeader::setArgs(std::map<std::string, mate::ast::expression::ObjectType*> s){
     this->_args = s;
 }
 
-mate::ast::expression::DataType* mate::ast::classifier::FunctionHeader::getReturnType(){
+mate::ast::expression::ObjectType* mate::ast::classifier::FunctionHeader::getReturnType(){
     return this->_returnType;
 }
 
-void mate::ast::classifier::FunctionHeader::setReturnType(mate::ast::expression::DataType* t){
+void mate::ast::classifier::FunctionHeader::setReturnType(mate::ast::expression::ObjectType* t){
     this->_returnType = t;
 }

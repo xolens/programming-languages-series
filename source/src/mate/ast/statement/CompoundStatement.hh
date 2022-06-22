@@ -19,6 +19,7 @@ public:
 
 	std::list<mate::ast::statement::Statement*> getStatements();
 	void addStatement(mate::ast::statement::Statement* s);
+	void addStatement(std::list<mate::ast::statement::Statement*>* statements);
 
 	void execute() override;
 

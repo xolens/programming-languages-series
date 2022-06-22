@@ -1,11 +1,11 @@
 #pragma once
 #include <iostream>
 #include <string>
-#include "DataType.hh"
+#include "ObjectType.hh"
 
 namespace mate::ast::expression {
 
-class ArrayType: public DataType {
+class ArrayType: public ObjectType {
 
 private:
 
