@@ -2,6 +2,7 @@
 #include <iostream>
 #include "Statement.hh"
 #include "../expression/Expression.hh"
+#include "../expression/Data.hh"
 
 
 namespace mate::ast::statement {
@@ -16,12 +17,8 @@ public:
 	PrintStatement(mate::ast::expression::Expression* _value);
 	~PrintStatement();
 
-	void execute() override;
+	void execute(mate::executor::Context* context) override;
 
 };
-
-
-	
-
 
 } /* end namespace mate::ast::statement */

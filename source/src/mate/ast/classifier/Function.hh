@@ -3,13 +3,14 @@
 #include <list>
 #include <functional>
 #include <stdexcept>
-#include "../statement/CompoundStatement.hh"
+#include "Executable.hh"
 #include "FunctionHeader.hh"
+#include "../statement/CompoundStatement.hh"
 
 namespace mate::ast::classifier {
 
 
-class Function {
+class Function: public Executable {
 
 private:
 	mate::ast::classifier::FunctionHeader* _header;
@@ -28,7 +29,7 @@ public:
 	mate::ast::statement::CompoundStatement* getStatements();
 	void setStatements(mate::ast::statement::CompoundStatement* stm);
 
-	void execute();
+	void execute(mate::executor::Context* context) override;
 };
 
 } /* end namespace mate::ast::classifier */

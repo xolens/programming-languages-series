@@ -2,10 +2,11 @@
 
 #include "Function.hh"
 #include "Modifiable.hh"
+#include "Executable.hh"
 
 namespace mate::ast::classifier {
 
-class Classifier: public mate::ast::classifier::Modifiable {
+class Classifier: public Executable, public mate::ast::classifier::Modifiable {
 
 private:
 	std::string  _name;
@@ -20,7 +21,8 @@ public:
 	
 	mate::ast::classifier::Function* getFunction();
 	void setFunction(mate::ast::classifier::Function* f);
-	void execute();
+
+	void execute(mate::executor::Context* context) override;
 
 };
 

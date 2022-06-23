@@ -6,3 +6,9 @@ mate::ast::statement::ExpressionStatement::ExpressionStatement(mate::ast::expres
 }
 
 mate::ast::statement::ExpressionStatement::~ExpressionStatement(){}
+
+void mate::ast::statement::ExpressionStatement::execute(mate::executor::Context* context){
+   if(this->exp!=NULL){
+      this->exp->valuate(context);
+   }
+}

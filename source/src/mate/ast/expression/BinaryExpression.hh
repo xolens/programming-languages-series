@@ -1,4 +1,5 @@
 #pragma once
+#include <algorithm>
 #include "Expression.hh"
 
 
@@ -14,6 +15,8 @@ private:
 public:
 	BinaryExpression(mate::ast::expression::Expression* op1, mate::ast::expression::Operator op, mate::ast::expression::Expression* op2);
 	~BinaryExpression();
+
+	mate::ast::expression::Data* valuate(mate::executor::Context* context) override;
 
 };
 

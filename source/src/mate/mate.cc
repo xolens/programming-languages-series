@@ -2,6 +2,7 @@
 #include "./mate.hh"
 #include "./parser/MateLexer.l.hh"
 #include "./ast/classifier/Classifier.hh"
+#include "./executor/Context.hh"
 
 
 int main(int argc, char* argv[]){
@@ -22,7 +23,8 @@ int main(int argc, char* argv[]){
 	yylex_destroy(scanner);
 
     std::cout << "[mate]---\n";
-    _class->execute();
+    mate::executor::Context* context = new mate::executor::Context();
+    _class->execute(context);
     std::cout << "---------\n";
 
     return 0;

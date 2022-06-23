@@ -1,6 +1,9 @@
 #pragma once
 #include <iostream>
 #include <list>
+#include <string>
+#include "Data.hh"
+#include "./../../executor/Context.hh"
 
 
 namespace mate::executor { class Context; }
@@ -33,6 +36,8 @@ public:
 	Expression();
 	~Expression();
 
+	virtual mate::ast::expression::Data* valuate(mate::executor::Context* context);
+	virtual std::string reference(mate::executor::Context* context);
 };
 
 

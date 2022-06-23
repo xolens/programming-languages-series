@@ -1,5 +1,8 @@
 #pragma once
 #include "Expression.hh"
+#include "BinaryExpression.hh"
+#include "UnaryExpression.hh"
+#include "IdentifierExpression.hh"
 
 namespace mate::ast::expression {
 
@@ -13,6 +16,8 @@ private:
 public:
 	AssignmentExpression(Expression* op1, Operator op, Expression* op2);
 	~AssignmentExpression();
+
+	mate::ast::expression::Data* valuate(mate::executor::Context* context) override;
 
 };
 

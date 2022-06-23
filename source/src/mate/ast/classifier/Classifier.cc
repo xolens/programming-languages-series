@@ -23,8 +23,8 @@ void mate::ast::classifier::Classifier::setFunction(mate::ast::classifier::Funct
 	this->_function = f;
 }
 
-void mate::ast::classifier::Classifier::execute(){
+void mate::ast::classifier::Classifier::execute(mate::executor::Context* context){
     if(this->_function!=NULL){
-	    this->_function->execute();
+	    this->_function->execute(context);
     }
 }

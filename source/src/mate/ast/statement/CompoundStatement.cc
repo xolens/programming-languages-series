@@ -21,8 +21,8 @@ void mate::ast::statement::CompoundStatement::addStatement(std::list<mate::ast::
 }
 
 
-void mate::ast::statement::CompoundStatement::execute(){
+void mate::ast::statement::CompoundStatement::execute(mate::executor::Context* context){
    for (mate::ast::statement::Statement*  s : this->_statements ) {
-      s->execute();
+      s->execute(context);
    }
 }

@@ -1,13 +1,13 @@
 #pragma once
 #include "./../../executor/Context.hh"
 
-namespace mate::ast::statement {
+namespace mate::ast::classifier {
 
-class Statement{
+class Executable{
 
 public:
-	Statement();
-	~Statement();
+	Executable();
+	~Executable();
 	
 	virtual void execute(mate::executor::Context* context);
 

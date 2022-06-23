@@ -1,8 +1,8 @@
 #pragma once
 #include <list>
-#include <iostream>
 #include <string>
 #include "Statement.hh"
+#include "./../../executor/Context.hh"
 
 
 namespace mate::ast::statement {
@@ -21,7 +21,7 @@ public:
 	void addStatement(mate::ast::statement::Statement* s);
 	void addStatement(std::list<mate::ast::statement::Statement*>* statements);
 
-	void execute() override;
+	void execute(mate::executor::Context* context) override;
 
 };
 

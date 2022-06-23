@@ -29,8 +29,8 @@ void mate::ast::classifier::Function::setStatements(mate::ast::statement::Compou
     this->_compoundStat = stm;
 }
 
-void mate::ast::classifier::Function::execute(){
+void mate::ast::classifier::Function::execute(mate::executor::Context* context){
     if(this->_compoundStat!=NULL){
-	    this->_compoundStat->execute();
+	    this->_compoundStat->execute(context);
     }
 }

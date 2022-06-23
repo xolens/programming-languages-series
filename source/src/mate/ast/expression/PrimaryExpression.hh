@@ -16,6 +16,8 @@ public:
 	PrimaryExpression(mate::ast::expression::Data* primitive);
 	~PrimaryExpression();
 
+	mate::ast::expression::Data* valuate(mate::executor::Context* context) override;
+
 };
 
 

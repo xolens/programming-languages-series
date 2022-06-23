@@ -1,4 +1,5 @@
 #pragma once
+#include <iostream>
 #include "Statement.hh"
 #include "../expression/Expression.hh"
 
@@ -14,6 +15,8 @@ private:
 public:
 	ExpressionStatement(mate::ast::expression::Expression* exp);
 	~ExpressionStatement();
+
+	void execute(mate::executor::Context* context) override;
 
 };
 

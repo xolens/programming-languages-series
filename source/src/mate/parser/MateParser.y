@@ -26,6 +26,7 @@
 	#include "../ast/expression/ArrayType.hh"
 	#include "../ast/expression/Expression.hh"
 	#include "../ast/expression/AssignmentExpression.hh"
+	#include "../ast/expression/IdentifierExpression.hh"
 	#include "../ast/expression/PrimaryExpression.hh"
 	#include "../ast/expression/BinaryExpression.hh"
 	#include "../ast/expression/UnaryExpression.hh"
@@ -65,7 +66,9 @@
 %type  <_Expression> additive_expression unary_expression multiplicative_expression
 %type  <_Operator> assignment_operator unary_operator
 
-%token <_String> IDENTIFIER STRING_LITERAL INTEGER DOUBLE
+%token <_String> IDENTIFIER STRING_LITERAL
+%token <_Int> INTEGER
+%token <_Double> DOUBLE
 
 %token ADD_EQ SUB_EQ MUL_EQ DIV_EQ MOD_EQ INC DEC
 
@@ -164,13 +167,13 @@ unary_operator
 primary_expression
 	: primitive { $$ = new mate::ast::expression::PrimaryExpression($1); }
 	| '(' expression ')' { $$ = $2; }
+	| IDENTIFIER { $$ = new mate::ast::expression::IdentifierExpression($1); }
 	;
 
 primitive
-	: INTEGER { $$ = mate::ast::expression::Data::ofValue($1); }
-	| DOUBLE { $$ = mate::ast::expression::Data::ofValue($1); }
-	| STRING_LITERAL { $$ = mate::ast::expression::Data::ofValue($1); }
-	| IDENTIFIER { $$ = mate::ast::expression::Data::ofValue($1); }
+	: INTEGER { $$ = mate::ast::expression::Data::ofInt($1); }
+	| DOUBLE { $$ = mate::ast::expression::Data::ofDouble($1); }
+	| STRING_LITERAL { $$ = mate::ast::expression::Data::ofString($1); }
 	;
 %%
 

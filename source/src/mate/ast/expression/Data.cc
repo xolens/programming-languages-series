@@ -1,6 +1,6 @@
 #include "Data.hh"
 
-const mate::ast::expression::Data mate::ast::expression::Data::_NULL = new mate::ast::expression::Data ();
+mate::ast::expression::Data* mate::ast::expression::Data::_NULL = new mate::ast::expression::Data ();
 
 mate::ast::expression::Data::~Data(){}
 

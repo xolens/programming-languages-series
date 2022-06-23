@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <iostream>
 
 namespace mate::ast::expression {
 
@@ -26,7 +27,7 @@ private:
 	std::string stringVal;
 
 public:
-	static const Data _NULL;
+	static Data* _NULL;
 	Data();
 	Data(long double val);
 	Data(long long val);
@@ -49,19 +50,19 @@ public:
 	std::string typeAsString();
 	std::string valueAsString();
 
-	static Data* ofValue(long double val){
+	static Data* ofDouble(long double val){
 		return new Data(val);
 	}
 
-	static Data* ofValue(long long val){
+	static Data* ofInt(long long val){
 		return new Data(val);
 	}
 
-	static Data* ofValue(bool val){
+	static Data* ofBool(bool val){
 		return new Data(val);
 	}
 
-	static Data* ofValue(std::string val){
+	static Data* ofString(std::string val){
 		return new Data(val);
 	}
 
