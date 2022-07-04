@@ -30,6 +30,7 @@
 	#include "../ast/expression/PrimaryExpression.hh"
 	#include "../ast/expression/BinaryExpression.hh"
 	#include "../ast/expression/UnaryExpression.hh"
+	#include "../ast/expression/ConditionnalExpression.hh"
 
 }
 
@@ -43,6 +44,7 @@
 %union {
 	long long _Int;
 	long double _Double;
+	bool _Bool;
 	char _String[1000];
 	mate::ast::statement::Statement* _Statement;
 	mate::ast::statement::CompoundStatement* _CompoundStatement;
@@ -62,15 +64,26 @@
 %type  <_Statement> statement print_statement exp_statement
 %type  <_ObjectType> data_type
 %type  <_Data> primitive
+
 %type  <_Expression> primary_expression expression assignment_expression
-%type  <_Expression> additive_expression unary_expression multiplicative_expression
+%type  <_Expression> conditional_expression logical_or_expression logical_and_expression inclusive_or_expression 
+%type  <_Expression> exclusive_or_expression and_expression equality_expression relational_expression shift_expression
+%type  <_Expression> additive_expression unary_expression postfix_expression multiplicative_expression
+
 %type  <_Operator> assignment_operator unary_operator
 
 %token <_String> IDENTIFIER STRING_LITERAL
 %token <_Int> INTEGER
 %token <_Double> DOUBLE
+%token <_Bool> BOOL
 
 %token ADD_EQ SUB_EQ MUL_EQ DIV_EQ MOD_EQ INC DEC
+
+%token ELLIPSIS
+%token RIGHT_EQ LEFT_EQ AND_EQ XOR_EQ OR_EQ
+%token RIGHT LEFT
+%token AND2 OR2
+%token EQ2 LS_EQ GT_EQ NOT_EQ
 
 %token CLASS 
 %token PUBLIC STATIC
@@ -114,7 +127,7 @@ statement
 	;
 
 print_statement
-	: PRINT expression ';' { $$ = new mate::ast::statement::PrintStatement($2); }
+	: PRINT '(' expression ')' ';' { $$ = new mate::ast::statement::PrintStatement($3); }
 	;
 
 exp_statement
@@ -126,7 +139,7 @@ expression
 	;
 
 assignment_expression
-	: additive_expression { $$ = $1; }
+	: conditional_expression { $$ = $1; }
 	| unary_expression assignment_operator assignment_expression { $$ = new mate::ast::expression::AssignmentExpression($1, $2, $3); }
 	;
 
@@ -137,6 +150,61 @@ assignment_operator
 	| MUL_EQ { $$ = mate::ast::expression::Operator::MUL_EQ; }
 	| DIV_EQ { $$ = mate::ast::expression::Operator::DIV_EQ; }
 	| MOD_EQ { $$ = mate::ast::expression::Operator::MOD_EQ; }
+	| LEFT_EQ { $$ = mate::ast::expression::Operator::LEFT_EQ; }
+	| RIGHT_EQ { $$ = mate::ast::expression::Operator::RIGHT_EQ; }
+	| AND_EQ { $$ = mate::ast::expression::Operator::AND_EQ; }
+	| XOR_EQ { $$ = mate::ast::expression::Operator::XOR_EQ; }
+	| OR_EQ { $$ = mate::ast::expression::Operator::OR_EQ; }
+	;
+
+conditional_expression
+	: logical_or_expression { $$ = $1; }
+	| logical_or_expression '?' expression ':' conditional_expression { $$ =  new mate::ast::expression::ConditionnalExpression($1, $3, $5); }
+	;
+
+logical_or_expression
+	: logical_and_expression { $$ = $1; }
+	| logical_or_expression OR2 logical_and_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::OR2, $3); }
+	;
+
+logical_and_expression
+	: inclusive_or_expression { $$ = $1; }
+	| logical_and_expression AND2 inclusive_or_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::AND2, $3); }
+	;
+
+inclusive_or_expression
+	: exclusive_or_expression { $$ = $1; }
+	| inclusive_or_expression '|' exclusive_or_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::OR, $3); }
+	;
+
+exclusive_or_expression
+	: and_expression { $$ = $1; }
+	| exclusive_or_expression '^' and_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::XOR, $3); }
+	;
+
+and_expression
+	: equality_expression { $$ = $1; }
+	| and_expression '&' equality_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::AND, $3); }
+	;
+
+equality_expression
+	: relational_expression { $$ = $1; }
+	| equality_expression EQ2 relational_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::EQ2, $3); }
+	| equality_expression NOT_EQ relational_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::NOT_EQ, $3); }
+	;
+
+relational_expression
+	: shift_expression { $$ = $1; }
+	| relational_expression '<' shift_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::LS, $3); }
+	| relational_expression '>' shift_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::GT, $3); }
+	| relational_expression LS_EQ shift_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::LS_EQ, $3); }
+	| relational_expression GT_EQ shift_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::GT_EQ, $3); }
+	;
+
+shift_expression
+	: additive_expression { $$ = $1; }
+	| shift_expression LEFT additive_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::LEFT, $3); }
+	| shift_expression RIGHT additive_expression { $$ =  new mate::ast::expression::BinaryExpression($1, mate::ast::expression::Operator::RIGHT, $3); }
 	;
 
 additive_expression
@@ -153,7 +221,7 @@ multiplicative_expression
 	;
 
 unary_expression
-	: primary_expression { $$ = $1; }
+	: postfix_expression { $$ = $1; }
 	| unary_operator unary_expression { $$ = new mate::ast::expression::UnaryExpression($1, $2); }
 	;
 
@@ -162,6 +230,14 @@ unary_operator
 	| '-' { $$ = mate::ast::expression::Operator::SUB; }
 	| INC { $$ = mate::ast::expression::Operator::INC; }
 	| DEC { $$ = mate::ast::expression::Operator::DEC; }
+	| '~' { $$ = mate::ast::expression::Operator::TILDE; }
+	| '!' { $$ = mate::ast::expression::Operator::NOT_EQ; }
+	;
+
+postfix_expression
+	: primary_expression { $$ = $1; }
+	| postfix_expression INC { $$ =  new mate::ast::expression::UnaryExpression(mate::ast::expression::Operator::INC, $1, true); }
+	| postfix_expression DEC { $$ =  new mate::ast::expression::UnaryExpression(mate::ast::expression::Operator::DEC, $1, true); }
 	;
 
 primary_expression
@@ -174,6 +250,7 @@ primitive
 	: INTEGER { $$ = mate::ast::expression::Data::ofInt($1); }
 	| DOUBLE { $$ = mate::ast::expression::Data::ofDouble($1); }
 	| STRING_LITERAL { $$ = mate::ast::expression::Data::ofString($1); }
+	| BOOL { $$ = mate::ast::expression::Data::ofBool($1); }
 	;
 %%
 

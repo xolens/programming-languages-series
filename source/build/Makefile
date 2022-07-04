@@ -26,6 +26,7 @@ build: build-parser
 		../src/mate/ast/expression/PrimaryExpression.cc \
 		../src/mate/ast/expression/BinaryExpression.cc \
 		../src/mate/ast/expression/UnaryExpression.cc \
+		../src/mate/ast/expression/ConditionnalExpression.cc \
 		\
 		../src/mate/ast/expression/ArrayType.cc \
 		../src/mate/ast/statement/CompoundStatement.cc \

@@ -55,7 +55,9 @@ mate::ast::expression::Data* mate::ast::expression::UnaryExpression::valuate(mat
          break;
       case mate::ast::expression::Operator::INC:
       case mate::ast::expression::Operator::DEC:
-         throw std::invalid_argument( "not implementation for ++ and --" );
+      case mate::ast::expression::Operator::TILDE:
+      case mate::ast::expression::Operator::NOT_EQ:
+         throw std::invalid_argument( "not implementation for ++, --, ~ and !" );
          break;
     }
 

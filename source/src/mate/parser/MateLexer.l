@@ -47,7 +47,7 @@ FS			(f|F|l|L)
 
 %%
 
-"print"						{ return(PRINT);}
+"Console.write"				{ return(PRINT);}
 
 "class"						{ return(CLASS);}
 
@@ -55,19 +55,9 @@ FS			(f|F|l|L)
 
 "static"					{ return(STATIC);}
 
-"{"							{ return('{'); }
+"true"                      { yylval->_Bool = true; return(BOOL); }
 
-"}"							{ return('}'); }
-
-"["							{ return('['); }
-
-"]"							{ return(']'); }
-
-"("							{ return('('); }
-
-")"							{ return(')'); }
-
-";"							{ return(';'); }
+"false"                     { yylval->_Bool = false; return(BOOL); }
 
 {L}({L}|{D})*				{ strcpy(yylval->_String, yytext); return(IDENTIFIER); }
 
@@ -89,6 +79,26 @@ FS			(f|F|l|L)
 
 0[xX]{H}+"."{H}*{P}?{FS}?   { yylval->_Double = std::stold(yytext); return(DOUBLE); }
 
+"{"							{ return('{'); }
+
+"}"							{ return('}'); }
+
+"["							{ return('['); }
+
+"]"							{ return(']'); }
+
+"("							{ return('('); }
+
+")"							{ return(')'); }
+
+";"							{ return(';'); }
+
+"..."	                    { return(ELLIPSIS); }
+
+">>="	                    { return(RIGHT_EQ); }
+
+"<<="	                    { return(LEFT_EQ); }
+
 "+="	                    { return(ADD_EQ); }
 
 "-="	                    { return(SUB_EQ); }
@@ -98,6 +108,44 @@ FS			(f|F|l|L)
 "/="	                    { return(DIV_EQ); }
 
 "%="	                    { return(MOD_EQ); }
+
+"&="	                    { return(AND_EQ); }
+
+"^="	                    { return(XOR_EQ); }
+
+"|="	                    { return(OR_EQ); }
+
+">>"	                    { return(RIGHT); }
+
+"<<"	                    { return(LEFT); }
+
+"++"	                    { return(INC); }
+
+"--"	                    { return(DEC); }
+
+"&&"	                    { return(AND2); }
+
+"||"	                    { return(OR2); }
+
+"<="	                    { return(LS_EQ); }
+
+">="	                    { return(GT_EQ); }
+
+"=="	                    { return(EQ2); }
+
+"!="	                    { return(NOT_EQ); }
+
+","	                        { return(','); }
+
+":"	                        { return(':'); }
+
+"."	                        { return('.'); }
+
+"&"	                        { return('&'); }
+
+"!"	                        { return('!'); }
+
+"~"	                        { return('~'); }
 
 "="	                        { return('='); }
 
@@ -111,6 +159,16 @@ FS			(f|F|l|L)
 
 "%"	                        { return('%'); }
 
+"<"	                        { return('<'); }
+
+">"	                        { return('>'); }
+
+"^"	                        { return('^'); }
+
+"|"	                        { return('|'); }
+
+"?"	                        { return('?'); }
+
 \"(\\.|[^\\"\n])*\"		    { 
     yytext[strlen(yytext)-1]=0; 
     char* tmp = replaceAll(yytext, "\\a", "\a"); tmp = replaceAll(tmp, "\\b", "\b");
@@ -121,6 +179,16 @@ FS			(f|F|l|L)
 }
 
 "//"[^\n]* 					{ /* consume single line comment */ }
+
+"/*"                        { /* consume multi lines comment */
+    char c, prev = 0;
+	/* (EOF maps to 0) */
+	while ((c = yyinput(yyg)) != 0){   
+	 	if (c == '\n') yylloc->first_column = yylloc->last_column = 0; 
+		if (c == '/' && prev == '*') break;
+		prev = c;
+	}
+}
 
 [ \t\v\n\f]					{ /* Ignore white spaces */ }
 

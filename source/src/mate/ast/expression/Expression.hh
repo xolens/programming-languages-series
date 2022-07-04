@@ -18,14 +18,38 @@ enum class Operator{
 	DIV_EQ, 		// "/="
 	MOD_EQ, 		// "%="
 
+	LEFT_EQ, 		// "<<="
+	RIGHT_EQ, 		// ">>="
+	AND_EQ, 		// "&="
+	XOR_EQ, 		// "^="
+	OR_EQ, 			// "|="
+
 	ADD, 			// "+"
 	SUB, 			// "-"
 	MUL, 			// "*"
 	DIV, 			// "/"
 	MOD, 			// "%"
+	TILDE, 			// "~"
 
 	INC, 			// "++"
 	DEC, 			// "--"
+
+	OR,				// |
+	AND,			// &
+	XOR,			// ^
+
+	AND2,			// &&
+	OR2,			// ||
+	
+	EQ2,		 	// "=="
+	NOT_EQ,			// ! 
+	LS,				// <
+	GT,				// >
+	LS_EQ,			// <=
+	GT_EQ,			// >=
+
+	LEFT,			// >>>
+	RIGHT,			// <<<
 };
 
 class Expression{
