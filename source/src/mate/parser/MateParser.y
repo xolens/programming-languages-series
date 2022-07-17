@@ -13,10 +13,13 @@
 	#include <list>
 
 	#include "../ast/classifier/Classifier.hh"
+	#include "../ast/classifier/Property.hh"
+	#include "../ast/classifier/Modifiable.hh"
 	#include "../ast/statement/CompoundStatement.hh"
 	#include "../ast/statement/Statement.hh"
 	#include "../ast/statement/PrintStatement.hh"
 	#include "../ast/statement/ExpressionStatement.hh"
+	#include "../ast/statement/DeclarationStatement.hh"
 	#include "../ast/classifier/FunctionHeader.hh"
 	#include "../mate.hh"
 	#include "../ast/classifier/Function.hh"
@@ -31,6 +34,9 @@
 	#include "../ast/expression/BinaryExpression.hh"
 	#include "../ast/expression/UnaryExpression.hh"
 	#include "../ast/expression/ConditionnalExpression.hh"
+	#include "../ast/expression/DataTypeExpression.hh"
+	#include "../ast/expression/NamespaceExpression.hh"
+	#include "../ast/expression/InstanciationExpression.hh"
 
 }
 
@@ -50,25 +56,58 @@
 	mate::ast::statement::CompoundStatement* _CompoundStatement;
 	mate::ast::classifier::FunctionHeader* _FunctionHeader;
 	mate::ast::classifier::Function* _Function;
+	mate::ast::classifier::Modifiable* _Modifiable;
+	std::list<mate::ast::classifier::Modifiable*>* _ModifiableList;
+	mate::ast::classifier::Property* _Property;
 	mate::ast::expression::ObjectType* _ObjectType;
 	mate::ast::expression::Data* _Data;
 	mate::ast::expression::Expression* _Expression;
+	std::list<mate::ast::expression::Expression*>* _ExpressionList;
 	mate::ast::expression::Operator _Operator;
 	std::list<mate::ast::statement::Statement*>* _StatementList;
+	std::list<mate::ast::classifier::Modifier>* _ClassItemModifierList;
+	mate::ast::classifier::Modifier _ClassItemModifier;
+	mate::ast::statement::DeclarationStatement* _DeclarationStatement;
+	mate::ast::expression::DataTypeExpression* _DataType;
+	std::list<mate::ast::expression::DataTypeExpression*>* _DataTypeList;
+	mate::ast::expression::NamespaceExpression* _NamespaceExpression;
+
+	std::list<mate::ast::statement::DeclarationInitializer*>* _DeclarationInitializerList;
+	mate::ast::statement::DeclarationInitializer* _DeclarationInitializer;
 }
 
-%type  <_FunctionHeader> function_header
+%type  <_FunctionHeader> function_header function_header_item
+%type  <_Property> property
+%type  <_Modifiable> class_item modifiable_class_item
+%type  <_ModifiableList> modifiable_class_items
 %type  <_CompoundStatement> compound_statement
 %type  <_Function> function
 %type  <_StatementList> statements
 %type  <_Statement> statement print_statement exp_statement
-%type  <_ObjectType> data_type
 %type  <_Data> primitive
 
 %type  <_Expression> primary_expression expression assignment_expression
 %type  <_Expression> conditional_expression logical_or_expression logical_and_expression inclusive_or_expression 
 %type  <_Expression> exclusive_or_expression and_expression equality_expression relational_expression shift_expression
 %type  <_Expression> additive_expression unary_expression postfix_expression multiplicative_expression
+
+
+
+
+%type  <_Expression> instanciation
+%type  <_ExpressionList> expression_list
+
+%type  <_DeclarationInitializer> declaration_initializer
+%type  <_DeclarationInitializerList> declaration_initializers
+
+%type  <_NamespaceExpression> namespace
+%type  <_DataType> data_type
+%type  <_DataTypeList> data_type_list
+%type  <_DeclarationStatement> internal_declaration declaration
+
+%type  <_ClassItemModifierList> modifiers
+%type  <_ClassItemModifier> modifier
+
 
 %type  <_Operator> assignment_operator unary_operator
 
@@ -86,7 +125,8 @@
 %token EQ2 LS_EQ GT_EQ NOT_EQ
 
 %token CLASS 
-%token PUBLIC STATIC
+%token PUBLIC PRIVATE PROTECTED
+%token STATIC VAR FINAL NEW
 %token PRINT
 
 %start entry_point
@@ -94,8 +134,37 @@
 %%
 
 entry_point
-	: CLASS IDENTIFIER '{' '}' { _class->setName($2); }
-	| CLASS IDENTIFIER '{' function '}' { _class->setName($2); _class->setFunction($4); }
+	: CLASS IDENTIFIER '{'  '}' { _class->setName($2); }
+	| CLASS IDENTIFIER '{' modifiable_class_items '}' { _class->setName($2); _class->addItems($4); }
+	;
+
+modifiable_class_items
+	: modifiable_class_item { $$ =  new std::list<mate::ast::classifier::Modifiable*>(); $$->push_front($1); }
+	| modifiable_class_items modifiable_class_item { $$->push_back($2); }
+	;
+
+modifiable_class_item
+	: class_item { $$ = $1;  }
+	| modifiers class_item { $$ = $2; $$->setModifiers($1);  }
+	;
+
+modifiers
+	: modifier { $$ =  new std::list<mate::ast::classifier::Modifier>(); $$->push_front($1); }
+	| modifiers modifier { $$->push_back($2); }
+	;
+
+modifier
+	: PUBLIC { $$ = mate::ast::classifier::Modifier::PUBLIC; }
+	| PRIVATE { $$ = mate::ast::classifier::Modifier::PRIVATE; }
+	| PROTECTED { $$ = mate::ast::classifier::Modifier::PROTECTED; }
+	| STATIC { $$ = mate::ast::classifier::Modifier::STATIC; }
+	| FINAL { $$ = mate::ast::classifier::Modifier::FINAL; }
+	;
+
+class_item
+	: function { $$ = $1; }
+	| property { $$ = $1; }
+	| function_header_item { $$ = $1; }
 	;
 
 function
@@ -103,17 +172,20 @@ function
 	;
 
 function_header
-	: PUBLIC STATIC data_type IDENTIFIER '(' data_type IDENTIFIER ')' { $$ = new mate::ast::classifier::FunctionHeader(); }
+	: data_type IDENTIFIER '(' data_type IDENTIFIER ')' { $$ = new mate::ast::classifier::FunctionHeader(); }
 	;
 
-data_type
-	: IDENTIFIER { $$ = new mate::ast::expression::ObjectType($1); }
-	| IDENTIFIER '['  ']' { $$ = new mate::ast::expression::ArrayType($1); }
+function_header_item
+	: function_header ';' { $$ = $1; }
 	;
 
 compound_statement
 	: '{' '}' { $$ = new mate::ast::statement::CompoundStatement(); }
 	| '{' statements '}' { $$ = new mate::ast::statement::CompoundStatement(); $$->addStatement($2); }
+	;
+
+property
+	: declaration ';' { $$ =  new mate::ast::classifier::Property($1); }
 	;
 
 statements
@@ -132,6 +204,43 @@ print_statement
 
 exp_statement
 	: expression ';' { $$ = new mate::ast::statement::ExpressionStatement($1); }
+	| internal_declaration ';' { $$ = $1; }
+	;
+
+internal_declaration
+	: FINAL declaration { $$ = $2; $$->setFinal(true); }
+	| VAR declaration { $$ = $2; }
+	;
+
+declaration
+	: data_type declaration_initializers { $$ = mate::ast::statement::DeclarationStatement::of($1, $2); }
+	;
+
+declaration_initializers
+	: declaration_initializer { $$ = new std::list<mate::ast::statement::DeclarationInitializer*>(); $$->push_back($1); }
+	| declaration_initializers ',' declaration_initializer { $$->push_back($3); }
+	;
+
+declaration_initializer
+	: IDENTIFIER { $$ = mate::ast::statement::DeclarationInitializer::of($1); }
+	| IDENTIFIER '=' expression { $$ = mate::ast::statement::DeclarationInitializer::of($1, $3); }
+	;
+
+data_type
+	: namespace { $$ = mate::ast::expression::DataTypeExpression::ofObject($1->get()); }
+	| namespace '<' '>' { $$ = mate::ast::expression::DataTypeExpression::ofTemplate($1->get(), NULL); }
+	| namespace '<' data_type_list '>' { $$ = mate::ast::expression::DataTypeExpression::ofTemplate($1->get(), $3); }
+	| namespace '['  ']' { $$ = mate::ast::expression::DataTypeExpression::ofArray($1->get()); }
+	;
+
+data_type_list
+	: data_type { $$ = new std::list<mate::ast::expression::DataTypeExpression*>(); $$->push_back($1); }
+	| data_type_list ',' data_type { $$->push_back($3); }
+	;
+
+namespace
+	: IDENTIFIER { $$ = new mate::ast::expression::NamespaceExpression($1); }
+	| namespace '.' IDENTIFIER { $$->add($3); }
 	;
 
 expression
@@ -244,7 +353,24 @@ primary_expression
 	: primitive { $$ = new mate::ast::expression::PrimaryExpression($1); }
 	| '(' expression ')' { $$ = $2; }
 	| IDENTIFIER { $$ = new mate::ast::expression::IdentifierExpression($1); }
+	| instanciation { $$ = $1; }
 	;
+
+
+instanciation
+	: NEW data_type '(' ')' { $$ = new mate::ast::expression::InstanciationExpression($2, NULL, false); }
+	| NEW data_type '(' expression_list ')' { $$ = new mate::ast::expression::InstanciationExpression($2, $4, false); }
+	| NEW data_type '{' '}' { $$ = new mate::ast::expression::InstanciationExpression($2, NULL, true); }
+	| NEW data_type '{' expression_list '}' { $$ = new mate::ast::expression::InstanciationExpression($2, $4, true); }
+	| '[' ']' { $$ = new mate::ast::expression::InstanciationExpression(NULL, NULL, true); }
+	| '[' expression_list ']' { $$ = new mate::ast::expression::InstanciationExpression(NULL, $2, true); }
+	;
+
+expression_list
+	: assignment_expression { $$ =  new std::list<mate::ast::expression::Expression*>(); $$->push_front($1); }
+	| expression_list ',' assignment_expression { $$->push_back($3); }
+	;
+
 
 primitive
 	: INTEGER { $$ = mate::ast::expression::Data::ofInt($1); }

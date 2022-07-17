@@ -1,7 +1,6 @@
 #include "Classifier.hh"
 
 mate::ast::classifier::Classifier::Classifier(){
-    this->_function = NULL;
 }
 
 mate::ast::classifier::Classifier::~Classifier(){}
@@ -15,16 +14,37 @@ void mate::ast::classifier::Classifier::setName(std::string  s){
     this->_name = s;
 }
 
-mate::ast::classifier::Function* mate::ast::classifier::Classifier::getFunction(){
-    return this->_function;
+void mate::ast::classifier::Classifier::addItems(std::list<mate::ast::classifier::Modifiable*>* classItems){
+    for (mate::ast::classifier::Modifiable* m: *classItems) {
+        if(mate::ast::classifier::Property* exp = dynamic_cast<mate::ast::classifier::Property*>(m)){
+            this->addProperty(exp);
+        }else if(mate::ast::classifier::Function* exp = dynamic_cast<mate::ast::classifier::Function*>(m)){
+            this->addFunction(exp);
+        }
+    }
 }
 
-void mate::ast::classifier::Classifier::setFunction(mate::ast::classifier::Function* f){
-	this->_function = f;
+std::list<mate::ast::classifier::Function*> mate::ast::classifier::Classifier::getFunctions(){
+    return this->_functions;
+}
+
+void mate::ast::classifier::Classifier::addFunction(mate::ast::classifier::Function* f){
+	this->_functions.push_back(f);
+}
+
+std::list<mate::ast::classifier::Property*> mate::ast::classifier::Classifier::getProperties(){
+    return this->_properties;
+}
+
+void mate::ast::classifier::Classifier::addProperty(mate::ast::classifier::Property* p){
+	this->_properties.push_back(p);
 }
 
 void mate::ast::classifier::Classifier::execute(mate::executor::Context* context){
-    if(this->_function!=NULL){
-	    this->_function->execute(context);
+  if(!this->_functions.empty()){
+        mate::ast::classifier::Function* _function = this->getFunctions().front();
+        if(_function!=NULL){
+            _function->execute(context);
+        }
     }
 }

@@ -10,7 +10,7 @@
 namespace mate::ast::classifier {
 
 
-class Function: public Executable {
+class Function: public Executable, public Modifiable {
 
 private:
 	mate::ast::classifier::FunctionHeader* _header;

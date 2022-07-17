@@ -53,7 +53,17 @@ FS			(f|F|l|L)
 
 "public"					{ return(PUBLIC);}
 
+"private"					{ return(PRIVATE);}
+
+"protected"					{ return(PROTECTED);}
+
 "static"					{ return(STATIC);}
+
+"var"					    { return(VAR);}
+
+"final"					    { return(FINAL);}
+
+"new"					    { return(NEW);}
 
 "true"                      { yylval->_Bool = true; return(BOOL); }
 

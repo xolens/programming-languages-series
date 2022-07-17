@@ -4,8 +4,11 @@
 namespace mate::ast::classifier {
 
 enum class Modifier{
-    PUBLIC,
-    STATIC,
+	PUBLIC,
+	PRIVATE,
+	PROTECTED,
+	STATIC,
+	FINAL,
 };
 
 class Modifiable {
@@ -15,7 +18,7 @@ private:
 
 public:
 	Modifiable();
-	~Modifiable();
+	virtual ~Modifiable();
 
 	void setModifiers(std::list<mate::ast::classifier::Modifier>* _modifiers);
 	std::list<mate::ast::classifier::Modifier>* getModifiers();

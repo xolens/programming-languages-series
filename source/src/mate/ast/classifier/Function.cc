@@ -4,6 +4,7 @@ mate::ast::classifier::Function::Function(){}
 
 mate::ast::classifier::Function::Function(mate::ast::classifier::FunctionHeader* _header){
     this->_header = _header;
+    this->setModifiers(_header->getModifiers());
 }
 
 mate::ast::classifier::Function::Function(mate::ast::classifier::FunctionHeader* _header, mate::ast::statement::CompoundStatement* stm){
